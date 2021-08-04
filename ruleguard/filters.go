@@ -309,6 +309,43 @@ func makeValueIntFilter(src, varname string, op token.Token, rhsVarname string) 
 	}
 }
 
+func makeValueStringConstFilter(src, varname string, op token.Token, rhsValue constant.Value) filterFunc {
+	return func(params *filterParams) matchFilterResult {
+		if list, ok := params.subNode(varname).(gogrep.ExprSlice); ok {
+			return exprListFilterApply(src, list, func(x ast.Expr) bool {
+				lhsValue := stringValueOf(params.ctx.Types, x)
+				return lhsValue != nil && constant.Compare(lhsValue, op, rhsValue)
+			})
+		}
+
+		lhsValue := stringValueOf(params.ctx.Types, params.subExpr(varname))
+		if lhsValue == nil {
+			return filterFailure(src) // The value is unknown
+		}
+		if constant.Compare(lhsValue, op, rhsValue) {
+			return filterSuccess
+		}
+		return filterFailure(src)
+	}
+}
+
+func makeValueStringFilter(src, varname string, op token.Token, rhsVarname string) filterFunc {
+	return func(params *filterParams) matchFilterResult {
+		lhsValue := stringValueOf(params.ctx.Types, params.subExpr(varname))
+		if lhsValue == nil {
+			return filterFailure(src)
+		}
+		rhsValue := stringValueOf(params.ctx.Types, params.subExpr(rhsVarname))
+		if rhsValue == nil {
+			return filterFailure(src)
+		}
+		if constant.Compare(lhsValue, op, rhsValue) {
+			return filterSuccess
+		}
+		return filterFailure(src)
+	}
+}
+
 func makeTextConstFilter(src, varname string, op token.Token, rhsValue constant.Value) filterFunc {
 	// TODO(quasilyte): add variadic support.
 	return func(params *filterParams) matchFilterResult {

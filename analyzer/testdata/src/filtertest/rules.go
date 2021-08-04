@@ -135,6 +135,8 @@ func testRules(m dsl.Matcher) {
 	m.Match(`valueTest($*xs, "variadic value 5")`).Where(m["xs"].Value.Int() == 5).Report(`true`)
 	m.Match(`valueTest($*xs, "variadic value 5")`).Where(!(m["xs"].Value.Int() == 5)).Report(`false`)
 
+	m.Match(`valueTest($*xs, "variadic value \"10\"")`).Where(m["xs"].Value.String() == "10").Report(`true`)
+
 	m.Match(`lineTest($x, "line 4")`).Where(m["x"].Line == 4).Report(`YES`)
 	m.Match(`lineTest($x, $y, "same line")`).Where(m["x"].Line == m["y"].Line).Report(`YES`)
 	m.Match(`lineTest($x, $y, "different line")`).Where(m["x"].Line != m["y"].Line).Report(`YES`)

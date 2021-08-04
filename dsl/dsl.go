@@ -149,6 +149,10 @@ type ExprValue struct{}
 // If value can't be computed, condition will fail.
 func (ExprValue) Int() int { return intResult }
 
+// String returns compile-time computable string value of the expression.
+// If value can't be computed, condition will fail.
+func (ExprValue) String() string { return stringResult }
+
 // TypesObject is a types.Object mapping.
 type TypesObject struct{}
 

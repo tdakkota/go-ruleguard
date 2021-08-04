@@ -156,6 +156,17 @@ func intValueOf(info *types.Info, expr ast.Expr) constant.Value {
 	return tv.Value
 }
 
+func stringValueOf(info *types.Info, expr ast.Expr) constant.Value {
+	tv := info.Types[expr]
+	if tv.Value == nil {
+		return nil
+	}
+	if tv.Value.Kind() != constant.String {
+		return nil
+	}
+	return tv.Value
+}
+
 // isPure reports whether expr is a softly safe expression and contains
 // no significant side-effects. As opposed to strictly safe expressions,
 // soft safe expressions permit some forms of side-effects, like

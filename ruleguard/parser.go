@@ -684,6 +684,14 @@ func (p *rulesParser) parseFilterExpr(e ast.Expr) matchFilter {
 				result.fn = makeValueIntFilter(result.src, operand.varName, e.Op, rhs.varName)
 				return result
 			}
+			if operand.path == "Value.String" && rhsValue != nil {
+				result.fn = makeValueStringConstFilter(result.src, operand.varName, e.Op, rhsValue)
+				return result
+			}
+			if operand.path == "Value.String" && rhs.path == "Value.String" && rhs.varName != "" {
+				result.fn = makeValueStringFilter(result.src, operand.varName, e.Op, rhs.varName)
+				return result
+			}
 			if operand.path == "Text" && rhsValue != nil {
 				result.fn = makeTextConstFilter(result.src, operand.varName, e.Op, rhsValue)
 				return result

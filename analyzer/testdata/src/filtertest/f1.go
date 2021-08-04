@@ -96,6 +96,8 @@ func detectValue() {
 	valueTest(5, "variadic value 5")        // want `true`
 	valueTest(2+3, 6-1, "variadic value 5") // want `true`
 
+	valueTest("10", "variadic value \"10\"") // want `true`
+
 	valueTest(0, "variadic value 5")    // want `false`
 	valueTest("5", "variadic value 5")  // want `false`
 	valueTest(5, 0, "variadic value 5") // want `false`
